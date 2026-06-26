@@ -45,9 +45,9 @@ from src.core.models import RawArticle
 # ── Selectors — centralised so changes only require edits here ────────────────
 
 _ARTICLE_CARD_SELECTORS = [
-    "app-article-item-bottom-text",     # primary Angular component
+    ".single-blog-post",                # confirmed via live diagnostics (diagnose4/5.py)
+    "app-article-item-bottom-text",     # legacy Angular component guess
     ".art-img.single-blog-post",        # rendered card container
-    ".single-blog-post",
     "article.blog-post",
     "article",
     "[class*='article-item']",
@@ -138,9 +138,24 @@ def parse_article_list(
             break
 
     if not cards:
+        # Diagnostic aid: dump a sample of class names actually present on
+        # the page, so a structure change can be diagnosed directly from
+        # logs instead of re-running diagnose*.py scripts manually.
+        all_classes: set[str] = set()
+        for tag in soup.find_all(class_=True):
+            classes = tag.get("class")
+            if classes:
+                all_classes.update(classes)
+        sample_classes = sorted(all_classes)[:40]
+
+        article_links = soup.select("a[href*='/article/']")
+
         logger.warning(
             f"No article cards found in WAM listing HTML for subcategory={subcategory}. "
-            f"Angular may not have rendered yet."
+            f"Angular may not have rendered yet, or page structure changed. "
+            f"HTML length={len(html)}, "
+            f"article-link-count={len(article_links)}, "
+            f"sample classes on page: {sample_classes}"
         )
         return []
 

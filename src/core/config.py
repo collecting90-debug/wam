@@ -72,30 +72,32 @@ class Settings(BaseSettings):
     @property
     def subcategories(self) -> list[dict]:
         """
-        WAM Sports has 3 subcategories navigated via the top tab bar.
+        WAM Sports subcategories.
 
-        Important: WAM is Angular-based. Navigating directly to a category
-        URL opens the homepage first, then auto-routes to the category.
-        The WAMScraper handles this correctly — these URLs are the canonical
-        deep-link targets that Angular eventually renders.
+        IMPORTANT: URLs confirmed working via live diagnostics (see
+        diagnose4.py / diagnose5.py in project root). The original
+        /en/sports/{slug} URLs do NOT render article cards — Angular's
+        router does not resolve them to content. The /ar/category/{slug}
+        URLs were confirmed via direct goto() + selector probing to
+        render `.single-blog-post` cards reliably.
         """
         return [
             {
                 "name": "كرة القدم",
                 "slug": "football",
-                "url": "https://www.wam.ae/en/sports/football",
+                "url": "https://www.wam.ae/ar/category/football",
                 "tab_index": 0,
             },
             {
                 "name": "سباقات الخيل والإبل",
                 "slug": "equestrian-camel-racing",
-                "url": "https://www.wam.ae/en/sports/equestrian-camel-racing",
+                "url": "https://www.wam.ae/ar/category/camel-racing",
                 "tab_index": 1,
             },
             {
                 "name": "رياضات أخرى",
                 "slug": "other-sports",
-                "url": "https://www.wam.ae/en/sports/other-sports",
+                "url": "https://www.wam.ae/ar/category/other-sports",
                 "tab_index": 2,
             },
         ]

@@ -36,10 +36,16 @@ from src.scraper.wam_parser import parse_article_detail, parse_article_list
 # ── Angular readiness selectors ───────────────────────────────────────────────
 # Tried in order — first match wins. These all indicate the subcategory
 # article list has finished rendering.
+#
+# IMPORTANT: ".single-blog-post" is the CONFIRMED selector from live
+# diagnostics against /ar/category/{slug} pages (see diagnose4.py/diagnose5.py
+# in project root) — it is listed first because it is the one known to
+# actually match. The others are kept as fallbacks only.
 _CONTENT_READY_SELECTORS = [
-    "app-article-item-bottom-text",    # primary Angular component
+    ".single-blog-post",               # confirmed via live diagnostics
+    "a[href*='/ar/article/']",         # confirmed article link pattern
+    "app-article-item-bottom-text",    # legacy Angular component guess
     ".art-img.single-blog-post",       # rendered card container
-    ".single-blog-post",
     "article.blog-post",
     "article",
     "[class*='article-item']",
